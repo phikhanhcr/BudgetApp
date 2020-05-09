@@ -1,0 +1,19 @@
+extends ./layout/commom.pug
+block content
+  .root
+    .wrapper
+      h1 Crazy Login Form
+      if errors
+          each err in errors
+            .alert.alert-danger.errorfill= err
+      .form-group.wrapper-form
+        p.fill Fill out the form below to login
+        div
+          form.form-wrapper.form-group(action='#', method='POST')
+            input(type='text', placeholder='Username', name='name', required)
+            input(type='password', placeholder='Password', name='pass', ,required)
+            a.forgot(href='#') Forgot Password
+            button.btn
+              | Login
+            a.btn(href='#')
+              | Sign In

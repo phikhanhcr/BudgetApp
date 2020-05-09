@@ -1,0 +1,74 @@
+head
+  meta(charset='UTF-8')
+  link(href='https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600', rel='stylesheet', type='text/css')
+  link(href='http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', rel='stylesheet', type='text/css')
+  link(type='text/css', rel='stylesheet', href='style/style.css')
+  title Budgety
+.top
+  .budget
+    .budget__title
+      | Available Budget in 
+      span.budget__title--month= month
+    .budget__value= totalBudget
+    .budget__income.clearfix
+      .budget__income--text Income
+      .right
+        .budget__income--value= `+ ${allAmountIncome}`
+        .budget__income--percentage &nbsp;
+    .budget__expenses.clearfix
+      .budget__expenses--text Expenses
+      .right.clearfix
+        .budget__expenses--value= `- ${allAmountExpenses}`
+        .budget__expenses--percentage= `${totalPer}%`
+.bottom
+  .add
+    .add__container
+      form(method="POST")
+        select.add__type(name="select")
+          option(value='inc', selected='') +
+          option(value='exp') -
+        input.add__description(type='text', placeholder='Add description', name="title" , required)
+        input.add__value(type='number', placeholder='Value', name="amount" , required)
+        button.add__btn
+          i.ion-ios-checkmark-outline
+  .container.clearfix
+    .income
+      h2.income__title Income
+      each i in income
+        .income__list
+          .item.clearfix
+            .item__description= i.name
+            .right.clearfix
+              .item__value= `+ ${i.amount}`
+              .item__delete
+                a(href=`/home/${i._id}/delete`).item__delete--btn
+                  i.ion-ios-close-outline
+    .expenses
+      h2.expenses__title Expenses
+      each j in expenses
+        .expenses__list
+          .item.clearfix
+            .item__description= j.expenses.name
+            .right.clearfix
+              .item__value= `- ${j.expenses.amount}`
+              .item__percentage= j.percentage + "%"
+              .item__delete
+                a(href=`/home/${j.expenses._id}/delete`).item__delete--btn
+                  i.ion-ios-close-outline
+script.
+  document.querySelector(".add__type").addEventListener('change', hi);
+  function hi() {
+  var fields = document.querySelectorAll(
+  ".add__type" + ',' +
+  ".add__description" + ',' +
+  ".add__value");
+  function nodeListForEach(list, cb) {
+  for (var i = 0; i < list.length; i++) {
+  cb(list[i]);
+  }
+  }
+  nodeListForEach(fields, function (cur) {
+  cur.classList.toggle('red-focus');
+  });
+  document.querySelector(".add__btn").classList.toggle('red');
+  }
