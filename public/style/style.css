@@ -7,7 +7,28 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+.profile {
+  display: flex;
+  align-items: center;
+}
+.profile .wrapper {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  flex-grow: 4;
+}
+.profile .wrapper p {
+  padding-top: 10px;
+  margin-left: 10px;
+}
+.profile .wrapper img {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+}
+.profile a {
+  flex-grow: 1;
+}
 .clearfix::after {
   content: "";
   display: table;

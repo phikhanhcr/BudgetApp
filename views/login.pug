@@ -9,11 +9,11 @@ block content
       .form-group.wrapper-form
         p.fill Fill out the form below to login
         div
-          form.form-wrapper.form-group(action='#', method='POST')
+          form.form-wrapper.form-group(method='POST')
             input(type='text', placeholder='Username', name='name', required)
             input(type='password', placeholder='Password', name='pass', ,required)
-            a.forgot(href='#') Forgot Password
+            a.forgot(href='/login/forgot') Forgot Password
             button.btn
               | Login
-            a.btn(href='#')
+            a.btn(href='/login/signin')
               | Sign In

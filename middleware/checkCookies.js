@@ -15,6 +15,6 @@ module.exports.checkCookies = async (req, res, next) => {
   if(!checkBudget.length) {
     await BUDGET.insertMany({ _id: req.signedCookies.userId });
   }
-   
+  res.locals.User = userId[0]
   next();
 }

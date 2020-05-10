@@ -25,9 +25,9 @@ module.exports.home = async (req, res) => {
       totalPer = Math.round(totalIncome / totalIncome * 100);
 
       if (totalExpenses > totalIncome) {
-        totalBudget = "-" + numberStandard(totalIncome - totalExpenses);
+        totalBudget = "- " + numberStandard(Math.abs(totalIncome - totalExpenses));
       } else {
-        totalBudget = "+" + numberStandard(totalIncome - totalExpenses);
+        totalBudget = "+ " + numberStandard(totalIncome - totalExpenses);
       }
       var arrPercentage = expenses.map(ele => {
         return Math.round(ele.amount / totalIncome * 100);
@@ -110,7 +110,7 @@ module.exports.delete = async (req, res, next) => {
   var index;
   if(findIndex(income, '_id', id) != null) {
     index = findIndex(income, '_id', id);
-    budget.income.slice(index , 1);
+    budget.income.splice(index , 1);
   } else {
     index = findIndex(expenses , '_id' , id);
     budget.expenses.splice(index , 1);

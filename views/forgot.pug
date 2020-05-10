@@ -47,8 +47,8 @@ head
     padding-left: 180px;
     }
     .form-wrapper .btn {
-    width: 100px;
-    margin-top: 10px;
+    width: 150px;
+    margin-top: 18px;
     border: 3px solid #bbb;
     font-size: 18px;
     transition: all 0.3s;
@@ -67,7 +67,7 @@ head
     align-items: center;
     justify-content: space-evenly;
     width: 384px;
-    height: 350px;
+    height: 450px;
     }
     .wrapper-form .fill {
     color: #bbb;
@@ -79,17 +79,17 @@ head
     }
 .root
   .wrapper
-    h1 Nothing is impossible
+    h1 Hey , stupid man ! ^_^
     if errors
-          each err in errors
-            .alert.alert-danger.errorfill= err
-    .form-group.wrapper-form(style='height: 400px;')
-      p.fill Sign in for free
+        each err in errors
+          .alert.alert-danger.errorfill= err
+    .form-group.wrapper-form
+      p.fill Why did you forget your password ? 
       div
         form.form-wrapper.form-group(method='POST')
-          input(type='email', placeholder='Email', name='email', required , value= values ? values.email : '')
-          input(type='text', placeholder='Username', name='name', required , value= values ? values.name : '')
-          input(type='password', placeholder='Password', name='pass', required)
-          input(type='password', placeholder='Password Again', name='pass2', required)
-          button.btn(style='margin-top:20px')
-            | Sign In
+          input(type='text', placeholder='Email', name='email', required)
+          input(type='text', placeholder='Username', name='name', required)
+          input(type='password', placeholder='New Password', name='pass', required)
+          input(type='password', placeholder='New Password again', name='pass1', required)
+          button.btn
+            | Oke em oi

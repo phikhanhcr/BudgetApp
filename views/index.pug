@@ -3,9 +3,15 @@ head
   link(href='https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600', rel='stylesheet', type='text/css')
   link(href='http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', rel='stylesheet', type='text/css')
   link(type='text/css', rel='stylesheet', href='style/style.css')
+  link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css")
   title Budgety
 .top
   .budget
+    .profile
+      .wrapper    
+        img(src=User.avatar)
+        p= User.user
+      a(href="/login").btn.btn-secondary Log Out
     .budget__title
       | Available Budget in 
       span.budget__title--month= month

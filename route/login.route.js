@@ -8,4 +8,11 @@ router.post('/' , controller.loginPost);
 
 router.get('/signin' , controller.signIn);
 
+router.post('/signin' , controller.signInPost);
+
+router.get('/forgot' , controller.forgot);
+
+router.post('/forgot' , controller.forgotPost);
+
+
 module.exports = router;
