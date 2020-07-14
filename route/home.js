@@ -8,4 +8,6 @@ router.post('/' , controller.add);
 
 router.get('/:id/delete' , controller.delete)
 
+//router.get('/:month', controller.getEachMonth)
+
 module.exports = router;

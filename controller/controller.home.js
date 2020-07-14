@@ -1,15 +1,26 @@
-var INCOME = require('../models/income');
-var EXPENSES = require('../models/expenses');
-var BUDGET = require('../models/budget');
+const EachMonth = require('../models/eachMonth')
 const numberStandard = require('../numberStandar');
 const getMonth = require('../getDate');
 
 module.exports.home = async (req, res) => {
   let totalPer = "--";
   let totalBudget = "+ 0.00";
-  let budget = await BUDGET.findById(req.signedCookies.userId);
-  var income = budget.income;
-  var expenses = budget.expenses;
+  // 1. check month hien tai 
+  console.log("Home=====================")
+  var currentMonth = new Date().getMonth() + 1;
+  // 2. find budget of current Month 
+  let budgetMonth = await EachMonth.find({ userId: req.signedCookies.userId })
+  console.log(budgetMonth);
+  const allBudgetAllMonth = budgetMonth[0].allBudget
+  //console.log(allBudgetAllMonth)
+  const budgetCurrentMonth = allBudgetAllMonth.filter(ele => {
+    return ele.month === currentMonth
+  });
+  
+  var income = budgetCurrentMonth[0].income;
+  console.log('income')
+  console.log(income)
+  var expenses = budgetCurrentMonth[0].expenses;
   var totalIncome = "0.00";
   var totalExpenses = "0.00";
   var obj = [];
@@ -32,7 +43,6 @@ module.exports.home = async (req, res) => {
       var arrPercentage = expenses.map(ele => {
         return Math.round(ele.amount / totalIncome * 100);
       })
-      console.log(arrPercentage);
       for (let i = 0; i < arrPercentage.length; i++) {
         obj[i] = {
           expenses: expenses[i],
@@ -58,9 +68,11 @@ module.exports.home = async (req, res) => {
       totalBudget = "- " + numberStandard(totalExpenses);
     }
   }
+  // select month , if selected month is not current month
+  // readonly, can't add or delete 
 
+  const arrMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-  //console.log(income.length);
   res.render('index', {
     "income": income,
     "expenses": obj,
@@ -68,39 +80,60 @@ module.exports.home = async (req, res) => {
     "allAmountExpenses": numberStandard(totalExpenses),
     "totalPer": totalPer,
     "totalBudget": totalBudget,
-    "month": getMonth()
+    "month": getMonth(),
+    "newArrMonth": arrMonth
   });
 }
+
+
+
+// module.exports.getEachMonth = async ( req, res ) => {
+//   const currentMonth = req.query.month;
+// }
+
+
 module.exports.add = async (req, res) => {
   var title = req.body.title;
   var amount = req.body.amount;
-  var budget = await BUDGET.findById(req.signedCookies.userId)
-  console.log("bughet" + budget);
+
+  let budgetMonth = await EachMonth.find({ userId: req.signedCookies.userId });
+  const allBudgetAllMonth = budgetMonth[0].allBudget
+  var currentMonth = new Date().getMonth() + 1;
+  console.log(allBudgetAllMonth)
+  var budgetCurrentMonth = allBudgetAllMonth.filter(ele => {
+    return ele.month === currentMonth
+  })
+  console.log(budgetCurrentMonth)
 
   if (req.body.select == 'inc') {
-    budget.income[budget.income.length] = {
+    budgetCurrentMonth[0].income[budgetCurrentMonth[0].income.length] = {
       name: title,
       amount: amount
     };
   } else {
-    budget.expenses[budget.expenses.length] = {
+    budgetCurrentMonth[0].expenses[budgetCurrentMonth[0].expenses.length] = {
       name: title,
       amount: amount
     };
   }
 
-  budget.save();
+  budgetMonth[0].save();
   res.redirect('/home');
 }
 
 module.exports.delete = async (req, res, next) => {
+  let budgetMonth = await EachMonth.find({ userId: req.signedCookies.userId });
+  const allBudgetAllMonth = budgetMonth[0].allBudget
+  var currentMonth = new Date().getMonth() + 1;
+  var budgetCurrentMonth = allBudgetAllMonth.filter(ele => {
+    return ele.month === currentMonth
+  })
   var id = req.params.id;
-  var budget = await BUDGET.findById(req.signedCookies.userId);
-  var income = budget.income;
-  var expenses = budget.expenses;
+  var income = budgetCurrentMonth[0].income;
+  var expenses = budgetCurrentMonth[0].expenses;
 
   function findIndex(arr, key, value) {
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
       if (arr[i][key] == value) {
         return i;
       }
@@ -108,14 +141,15 @@ module.exports.delete = async (req, res, next) => {
     return null;
   }
   var index;
-  if(findIndex(income, '_id', id) != null) {
+  console.log("index    + ", index)
+  if (findIndex(income, '_id', id) != null) {
     index = findIndex(income, '_id', id);
-    budget.income.splice(index , 1);
+    budgetCurrentMonth[0].income.splice(index, 1);
   } else {
-    index = findIndex(expenses , '_id' , id);
-    budget.expenses.splice(index , 1);
+    index = findIndex(expenses, '_id', id);
+    budgetCurrentMonth[0].expenses.splice(index, 1);
   }
   console.log("index" + index);
-  budget.save();
+  budgetMonth[0].save();
   res.redirect('/home');
 }

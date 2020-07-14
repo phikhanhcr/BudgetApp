@@ -1,6 +1,8 @@
 const USER = require('../models/user.models');
 var BUDGET = require('../models/budget');
+var EachMonth = require('../models/eachMonth')
 module.exports.checkCookies = async (req, res, next) => {
+  // check cookies
   if (!req.signedCookies.userId) {
     res.redirect('/login');
     return;
@@ -11,10 +13,6 @@ module.exports.checkCookies = async (req, res, next) => {
     return;
   }
   
-  var checkBudget = await BUDGET.find({_id : req.signedCookies.userId})
-  if(!checkBudget.length) {
-    await BUDGET.insertMany({ _id: req.signedCookies.userId });
-  }
   res.locals.User = userId[0]
   next();
 }

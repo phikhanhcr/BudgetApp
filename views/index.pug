@@ -3,6 +3,7 @@ head
   link(href='https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600', rel='stylesheet', type='text/css')
   link(href='http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', rel='stylesheet', type='text/css')
   link(type='text/css', rel='stylesheet', href='style/style.css')
+  script(src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js")
   link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css")
   title Budgety
 .top
@@ -29,9 +30,15 @@ head
 .bottom
   .add
     .add__container
+      form.get-month(method="GET")
+        select.select-month(name="selectMonth")
+          each item in newArrMonth 
+            option(value=item)= item
+        button.add__btn
+          i.ion-ios-checkmark-outline
       form(method="POST")
         select.add__type(name="select")
-          option(value='inc', selected='') +
+          option(value='inc', selected) +
           option(value='exp') -
         input.add__description(type='text', placeholder='Add description', name="title" , required)
         input.add__value(type='number', placeholder='Value', name="amount" , required)
@@ -61,6 +68,14 @@ head
               .item__delete
                 a(href=`/home/${j.expenses._id}/delete`).item__delete--btn
                   i.ion-ios-close-outline
+  .container
+    canvas#myChart(width='200', height='200')
+    div
+      p InCome 
+        span#income= allAmountIncome
+      p Expense
+        span#expense= allAmountExpenses
+    h3 Thống Kế theo từng tháng
 script.
   document.querySelector(".add__type").addEventListener('change', hi);
   function hi() {
@@ -78,3 +93,40 @@ script.
   });
   document.querySelector(".add__btn").classList.toggle('red');
   }
+  var allAmountIncome = document.getElementById('income').innerHTML;
+  var incomeReal = parseInt(allAmountIncome.slice(0 , allAmountIncome.length - 3).split(',').reduce((a , b) => {
+    return a.concat(b)
+  }))
+  var allAmountExpenses = document.getElementById('expense').innerHTML;
+   var expenseReal = parseInt(allAmountExpenses.slice(0 , allAmountExpenses.length - 3).split(',').reduce((a , b) => {
+    return a.concat(b)
+  }))
+  console.log(incomeReal)
+  console.log(expenseReal)
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+  labels: ['Income', 'Expenses'],
+  datasets: [{
+  label: 'Budget',
+  data: [incomeReal, expenseReal ,0],
+  backgroundColor: [
+  'rgba(54, 162, 235, 0.2)',
+  'rgba(255, 99, 132, 0.2)'
+  
+  ],
+  borderColor: [
+  'rgba(54, 162, 235, 1)',
+  'rgba(255, 99, 132, 1)'
+  ],
+  borderWidth: 1
+  }],
+  options:{
+    title:{
+      display:true,
+      text:"Manage Your Financial"
+    }
+  }
+  }
+  });
