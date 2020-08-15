@@ -5,6 +5,7 @@ const getMonth = require('../getDate');
 module.exports.home = async (req, res) => {
   let totalPer = "--";
   let totalBudget = "+ 0.00";
+  let checkMonthNow = 'none';
   // 1. check month hien tai 
   console.log("Home=====================")
   var currentMonth = new Date().getMonth() + 1;
@@ -12,10 +13,44 @@ module.exports.home = async (req, res) => {
   let budgetMonth = await EachMonth.find({ userId: req.signedCookies.userId })
   console.log(budgetMonth);
   const allBudgetAllMonth = budgetMonth[0].allBudget
-  //console.log(allBudgetAllMonth)
-  const budgetCurrentMonth = allBudgetAllMonth.filter(ele => {
-    return ele.month === currentMonth
-  });
+
+  // find sum of income and expense each month
+  
+  var eachMonthBudgetChartIncome = allBudgetAllMonth.map(ele => {
+    if(ele.length !== 0 ) {
+      return ele.income.reduce((a, b) => {
+        return a + b.amount 
+      }, 0)
+    }
+  }).splice(0,currentMonth)
+  var eachMonthBudgetChartExpense = allBudgetAllMonth.map(ele => {
+    if(ele.length !== 0 ) {
+      return ele.expenses.reduce((a, b) => {
+        return a + b.amount 
+      }, 0)
+    }
+  }).splice(0,currentMonth)
+  
+  console.log(eachMonthBudgetChartIncome)
+  console.log(eachMonthBudgetChartExpense)
+
+  // convert it to an array
+  // pass as parameter
+  var budgetCurrentMonth;
+  if(req.query.selectMonth === undefined ) {
+    budgetCurrentMonth = allBudgetAllMonth.filter(ele => {
+      return ele.month === currentMonth
+    });
+    checkMonthNow = "block";
+  } else {
+    budgetCurrentMonth = allBudgetAllMonth.filter(ele => {
+      return ele.month === parseInt(req.query.selectMonth)
+    });
+  }
+  if(parseInt(req.query.selectMonth) === currentMonth ) {
+    checkMonthNow = "block"
+  } 
+  
   
   var income = budgetCurrentMonth[0].income;
   console.log('income')
@@ -70,7 +105,7 @@ module.exports.home = async (req, res) => {
   }
   // select month , if selected month is not current month
   // readonly, can't add or delete 
-
+  
   const arrMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   res.render('index', {
@@ -81,7 +116,10 @@ module.exports.home = async (req, res) => {
     "totalPer": totalPer,
     "totalBudget": totalBudget,
     "month": getMonth(),
-    "newArrMonth": arrMonth
+    "newArrMonth": arrMonth,
+    "chartIncome" : eachMonthBudgetChartIncome,
+    "chartExpense" : eachMonthBudgetChartExpense,
+    "checkMonthNow" : checkMonthNow 
   });
 }
 
@@ -153,3 +191,5 @@ module.exports.delete = async (req, res, next) => {
   budgetMonth[0].save();
   res.redirect('/home');
 }
+
+// 

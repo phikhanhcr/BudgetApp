@@ -30,13 +30,17 @@ head
 .bottom
   .add
     .add__container
+      p.chooseMonth Choose Month 
+      span.note *Note: You can edit detail when you are in current month 
       form.get-month(method="GET")
-        select.select-month(name="selectMonth")
-          each item in newArrMonth 
-            option(value=item)= item
+        select.select-month.form-group(name="selectMonth")
+          each item in newArrMonth
+            if checkMonthNow == item
+              option(value=item checked)= item
+            option(value=item)= item    
         button.add__btn
           i.ion-ios-checkmark-outline
-      form(method="POST")
+      form(method="POST")(style={display : checkMonthNow})
         select.add__type(name="select")
           option(value='inc', selected) +
           option(value='exp') -
@@ -69,13 +73,18 @@ head
                 a(href=`/home/${j.expenses._id}/delete`).item__delete--btn
                   i.ion-ios-close-outline
   .container
-    canvas#myChart(width='200', height='200')
+    h3 Thống Kê theo từng tháng
+    canvas#myChart(width='200', height='100')
     div
+      p(style='display:none') Chart Income
+        span#chartIncome= chartIncome
+      p(style='display:none') Chart Expense
+        span#chartExpense= chartExpense
       p InCome 
         span#income= allAmountIncome
       p Expense
         span#expense= allAmountExpenses
-    h3 Thống Kế theo từng tháng
+    
 script.
   document.querySelector(".add__type").addEventListener('change', hi);
   function hi() {
@@ -101,26 +110,30 @@ script.
    var expenseReal = parseInt(allAmountExpenses.slice(0 , allAmountExpenses.length - 3).split(',').reduce((a , b) => {
     return a.concat(b)
   }))
-  console.log(incomeReal)
-  console.log(expenseReal)
+  var IncomeChart = document.getElementById('chartIncome').innerHTML.split(',').map(ele => parseInt(ele));
+  console.log(IncomeChart)
+  var ExpenseChart = document.getElementById('chartExpense').innerHTML.split(',').map(ele => parseInt(ele));
   var ctx = document.getElementById('myChart').getContext('2d');
   var myChart = new Chart(ctx, {
-  type: 'bar',
+  type: 'line',
   data: {
-  labels: ['Income', 'Expenses'],
+  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [{
-  label: 'Budget',
-  data: [incomeReal, expenseReal ,0],
-  backgroundColor: [
-  'rgba(54, 162, 235, 0.2)',
-  'rgba(255, 99, 132, 0.2)'
-  
-  ],
-  borderColor: [
-  'rgba(54, 162, 235, 1)',
-  'rgba(255, 99, 132, 1)'
-  ],
-  borderWidth: 1
+    label: 'Income',
+    data: IncomeChart ,
+    borderColor: [
+    'rgb(54, 162, 235, 1)',
+    'rgba(255, 99, 132, 1)'
+    ],
+    borderWidth: 1
+  },{
+    label : 'Expense',
+    data: ExpenseChart,
+    borderColor: [
+    'rgba(232, 27, 27,1)'
+    ],
+    backgroundColor : 'rgba(218, 158, 158, 0.4)',
+    borderWidth: 1
   }],
   options:{
     title:{

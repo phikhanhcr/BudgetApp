@@ -25,7 +25,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MongoDb, { useNewUrlParser: true });
 
 app.get('/', (req, res) => {
-  res.send("helol");
+  res.redirect('home')
 })
 
 
