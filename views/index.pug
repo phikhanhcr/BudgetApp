@@ -40,7 +40,7 @@ head
             option(value=item)= item    
         button.add__btn
           i.ion-ios-checkmark-outline
-      form(method="POST")(style={display : checkMonthNow})
+      form(method="POST" style={display : checkMonthNow})
         select.add__type(name="select")
           option(value='inc', selected) +
           option(value='exp') -
@@ -80,6 +80,8 @@ head
         span#chartIncome= chartIncome
       p(style='display:none') Chart Expense
         span#chartExpense= chartExpense
+      p(style='display:none')
+        span#arrMonthUptoNow= arrMonthUptoNow
       p InCome 
         span#income= allAmountIncome
       p Expense
@@ -114,10 +116,12 @@ script.
   console.log(IncomeChart)
   var ExpenseChart = document.getElementById('chartExpense').innerHTML.split(',').map(ele => parseInt(ele));
   var ctx = document.getElementById('myChart').getContext('2d');
+  var arrMonthUptoNow = document.getElementById('arrMonthUptoNow').innerHTML.split(',').map(ele => ele);
+  console.log(arrMonthUptoNow)
   var myChart = new Chart(ctx, {
   type: 'line',
   data: {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  labels: arrMonthUptoNow,
   datasets: [{
     label: 'Income',
     data: IncomeChart ,

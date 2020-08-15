@@ -115,11 +115,12 @@ module.exports.home = async (req, res) => {
     "allAmountExpenses": numberStandard(totalExpenses),
     "totalPer": totalPer,
     "totalBudget": totalBudget,
-    "month": getMonth(),
+    "month": getMonth.getCurrentMonth(),
     "newArrMonth": arrMonth,
     "chartIncome" : eachMonthBudgetChartIncome,
     "chartExpense" : eachMonthBudgetChartExpense,
-    "checkMonthNow" : checkMonthNow 
+    "checkMonthNow" : checkMonthNow,
+    "arrMonthUptoNow" : getMonth.getArrayMonthUptoNow()
   });
 }
 
