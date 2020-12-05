@@ -18,4 +18,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## Some images from this app
+> Home page
 ![HOME]('./../assets/images/home.png)
+> Statistical chart by month 
+> ![Chart]('./../assets/images/chart.png)
